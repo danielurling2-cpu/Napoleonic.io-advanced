@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Civil War Game</title>
+<style>
+canvas {
+background: #6dbf4b;
+display: block;
+margin: auto;
+}
+</style>
+</head>
+<body>
+
+<canvas id="game" width="800" height="500"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+// Load soldier images
+const blueSoldierImg = new Image();
+blueSoldierImg.src = 'https://your-image-source.com/blue-soldier.png'; // Replace with your own image URL
+const redSoldierImg = new Image();
+redSoldierImg.src = 'https://your-image-source.com/red-soldier.png'; // Replace with your own image URL
+
+let soldiers = [];
+
+// Soldier class with more realistic appearance
+class Soldier {
+constructor(x, y, team) {
+this.x = x;
+this.y = y;
+this.team = team;
+this.health = 100;
+this.width = 20;
+this.height = 40;
+}
+
+draw() {
+ctx.drawImage(this.team === "blue" ? blueSoldierImg : redSoldierImg, this.x, this.y, this.width, this.height);
+}
+
+move(dx, dy) {
+this.x += dx;
+this.y += dy;
+}
+
+shoot() {
+bullets.push({
+x: this.x + (this.team === "blue" ? this.width : 0),
+y: this.y + this.height / 2,
+dx: this.team === "blue" ? 3 : -3,
+team: this.team
+});
+}
+}
+
+let bullets = [];
+
+// Create soldiers
+for (let i = 0; i < 5; i++) {
+soldiers.push(new Soldier(100, 50 + i * 60, "blue"));
+soldiers.push(new Soldier(600, 50 + i * 60, "red"));
+}
+
+// Controls for both teams
+document.addEventListener("keydown", (e) => {
+// Blue Team Controls (WASD)
+if (e.key === "w") soldiers.forEach(s => s.team === "blue" && s.move(0, -5));
+if (e.key === "s") soldiers.forEach(s => s.team === "blue" && s.move(0, 5));
+if (e.key === "a") soldiers.forEach(s => s.team === "blue" && s.move(-5, 0));
+if (e.key === "d") soldiers.forEach(s => s.team === "blue" && s.move(5, 0));
+if (e.key === " ") soldiers.forEach(s => s.team === "blue" && s.shoot());
+
+// Red Team Controls (Arrow Keys)
+if (e.key === "ArrowUp") soldiers.forEach(s => s.team === "red" && s.move(0, -5));
+if (e.key === "ArrowDown") soldiers.forEach(s => s.team === "red" && s.move(0, 5));
+if (e.key === "ArrowLeft") soldiers.forEach(s => s.team === "red" && s.move(-5, 0));
+if (e.key === "ArrowRight") soldiers.forEach(s => s.team === "red" && s.move(5, 0));
+if (e.key === "Enter") soldiers.forEach(s => s.team === "red" && s.shoot());
+});
+
+// Game loop to update the game screen
+function update() {
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+soldiers.forEach(s => s.draw());
+
+bullets.forEach(b => {
+b.x += b.dx;
+ctx.fillStyle = "black";
+ctx.fillRect(b.x, b.y, 5, 2);
+
+// Hit detection
+soldiers.forEach(s => {
+if (Math.abs(b.x - s.x) < 20 && Math.abs(b.y - s.y) < 20 && b.team !== s.team) {
+s.health -= 10;
+bullets = bullets.filter(bullet => bullet !== b); // Remove bullet on hit
+}
+});
+});
+
+soldiers = soldiers.filter(s => s.health > 0); // Remove dead soldiers
+
+requestAnimationFrame(update);
+}
+
+update();
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Civil War Game</title>
+  <style>
+    canvas {
+      background: #6dbf4b;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="game" width="800" height="500"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+// Load soldier images with placeholder URLs for testing
+const blueSoldierImg = new Image();
+blueSoldierImg.src = 'https://via.placeholder.com/20x40/0000FF/808080?text=Blue'; // Blue soldier image
+const redSoldierImg = new Image();
+redSoldierImg.src = 'https://via.placeholder.com/20x40/FF0000/808080?text=Red'; // Red soldier image
+
+let soldiers = [];
+
+// Soldier class with more realistic appearance
+class Soldier {
+  constructor(x, y, team) {
+    this.x = x;
+    this.y = y;
+    this.team = team;
+    this.health = 100;
+    this.width = 20;
+    this.height = 40;
+  }
+
+  draw() {
+    ctx.drawImage(this.team === "blue" ? blueSoldierImg : redSoldierImg, this.x, this.y, this.width, this.height);
+  }
+
+  move(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+  }
+
+  shoot() {
+    bullets.push({
+      x: this.x + (this.team === "blue" ? this.width : 0),
+      y: this.y + this.height / 2,
+      dx: this.team === "blue" ? 3 : -3,
+      team: this.team
+    });
+  }
+}
+
+let bullets = [];
+
+// Create soldiers
+for (let i = 0; i < 5; i++) {
+  soldiers.push(new Soldier(100, 50 + i * 60, "blue"));
+  soldiers.push(new Soldier(600, 50 + i * 60, "red"));
+}
+
+// Controls for both teams
+document.addEventListener("keydown", (e) => {
+  // Blue Team Controls (WASD)
+  if (e.key === "w") soldiers.forEach(s => s.team === "blue" && s.move(0, -5));
+  if (e.key === "s") soldiers.forEach(s => s.team === "blue" && s.move(0, 5));
+  if (e.key === "a") soldiers.forEach(s => s.team === "blue" && s.move(-5, 0));
+  if (e.key === "d") soldiers.forEach(s => s.team === "blue" && s.move(5, 0));
+  if (e.key === " ") soldiers.forEach(s => s.team === "blue" && s.shoot());
+
+  // Red Team Controls (Arrow Keys)
+  if (e.key === "ArrowUp") soldiers.forEach(s => s.team === "red" && s.move(0, -5));
+  if (e.key === "ArrowDown") soldiers.forEach(s => s.team === "red" && s.move(0, 5));
+  if (e.key === "ArrowLeft") soldiers.forEach(s => s.team === "red" && s.move(-5, 0));
+  if (e.key === "ArrowRight") soldiers.forEach(s => s.team === "red" && s.move(5, 0));
+  if (e.key === "Enter") soldiers.forEach(s => s.team === "red" && s.shoot());
+});
+
+// Game loop to update the game screen
+function update() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  soldiers.forEach(s => s.draw());
+
+  bullets.forEach(b => {
+    b.x += b.dx;
+    ctx.fillStyle = "black";
+    ctx.fillRect(b.x, b.y, 5, 2);
+
+    // Hit detection
+    soldiers.forEach(s => {
+      if (Math.abs(b.x - s.x) < 20 && Math.abs(b.y - s.y) < 20 && b.team !== s.team) {
+        s.health -= 10;
+        bullets = bullets.filter(bullet => bullet !== b); // Remove bullet on hit
+      }
+    });
+  });
+
+  soldiers = soldiers.filter(s => s.health > 0); // Remove dead soldiers
+
+  requestAnimationFrame(update);
+}
+
+// Start game after both images are loaded
+blueSoldierImg.onload = function() {
+  redSoldierImg.onload = function() {
+    update(); // Start the game after both images are loaded
+  };
+};
+</script>
+
+</body>
+</html>
